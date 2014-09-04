@@ -13,5 +13,8 @@
     "body-parser": "~1.0.0",
     "debug": "~0.7.4",
     "ejs": "~0.8.5"
+  },
+  "devDependencies": {
+    "node-minify": "^0.10.5"
   }
 }
