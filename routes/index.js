@@ -11,9 +11,10 @@ router.get('/cdn', function(req, res) {
 
 router.get('/cdn/js/:jsname', function(req, res) {
    var jsname = req.params.jsname.toString();
-   fs.readFile('../js_components/' + jsname, function(err, file){
+   fs.readFile('js_components/' + jsname, function(err, file){
        if(err){
-           res.setHeader(404);
+           console.log('css readfile error', err);
+           res.writeHead(404);
            res.end('//no this file');
        }
        res.end(file);
@@ -30,7 +31,7 @@ router.get('/cdn/js*', function(req, res){
             querys.forEach(function(name){
                 fs.readFile('js_components/' + name, function (err, content){
                     if(err){
-                        console.log(name, err);
+                        res.writeHead(404);
                         return res.end('//can not find file: ' + name);
                     }
                     result[name] = content;
@@ -46,18 +47,21 @@ router.get('/cdn/js*', function(req, res){
                     }
                 });
             });
+        }else{
+            return res.redirect('/cdn');
         }
     }
 });
 
 router.get('/cdn/css/:cssname', function(req, res) {
     var css = req.params.cssname.toString();
-    fs.readFile('../css_components/' + css, function(err, file){
+    fs.readFile('css_components/' + css, function(err, file){
         if(err){
-            res.setHeader(404);
-            res.end('//error file not found');
+            console.log('css readfile error', err);
+            res.writeHead(404);
+            res.end('/* error: file not found */');
         }
-        res.setHeader(200, {'Content-Type': 'text/css'});
+        res.writeHead(200, {'Content-Type': 'text/css'});
         res.end(file);
     });
 });
@@ -72,7 +76,8 @@ router.get('/cdn/css*', function(req, res){
             querys.forEach(function(name){
                 fs.readFile('css_components/' + name, function (err, content){
                     if(err){
-                        return res.end('//can not find file: ' + name);
+                        res.writeHead(404);
+                        return res.end('/*can not find file: ' + name + '*/');
                     }
                     result[name] = content;
                     flag++;
@@ -87,13 +92,21 @@ router.get('/cdn/css*', function(req, res){
                     }
                 });
             });
+        }else{
+            return res.redirect('/cdn');
         }
     }
 });
 
 
 router.get('/cdn/admin', function(req, res){
-   res.render('admin', {});
+    res.redirect('/cdn/upload')
+
+});
+
+
+router.get('/cdn/upload', function(req, res){
+    res.render('upload');
 });
 
 router.post('/cdn/upload', function (req, res) {
@@ -119,11 +132,12 @@ router.post('/cdn/upload', function (req, res) {
         tmpPath.pipe(fstream);
         fstream.on('close', function () {
             save(hashName, hash, type, true, function(err){
-                console.log(123123123123213);
-//                if(err){
-//                    return res.end(err);
-//                }
-                res.end('ok');
+                if(err){
+                    return res.end(err);
+                }
+                var minName = hashName.slice(0, -extName.length) + 'min.' + extName;
+
+                res.render('success', {type: type, fileName: hashName, minName: minName});
             });
         });
     });

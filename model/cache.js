@@ -29,7 +29,6 @@ Cache.save = function(obj, callback){
         });
 
         package.save(function(err){
-            console.log(12323);
             callback.call(this, err);
         });
     }

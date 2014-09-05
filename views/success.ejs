@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RedRock CDN Manager</title>
+</head>
+<body>
+    <h3>上传成功</h3>
+    <% if(type == 'js'){ %>
+    <p>文件： <a href="/cdn/js/<%= fileName %>"><%= fileName %></a> </p>
+    <pre>
+&lt;script src="http://hongyan.cqupt.edu.cn/cdn/js/<%= fileName %>"&gt;&lt;/script&gt;
+    </pre>
+    <p>压缩版本： <a href="/cdn/js/<%= minName %>"><%= minName %></a> </p>
+    <pre>
+&lt;script src="http://hongyan.cqupt.edu.cn/cdn/js/<%= minName %>"&gt;&lt;/script&gt;
+    </pre>
+    <% } %>
+    <% if(type == 'css'){ %>
+    <p>文件： <a href="/cdn/css/<%= fileName %>"><%= fileName %></a> </p>
+    <pre>
+&lt;link rel="stylesheet" href="http://hongyan.cqupt.edu.cn/cdn/js/<%= fileName %>"/&gt;&lt;/link&gt;
+    </pre>
+    <p>压缩版本： <a href="/cdn/css/<%= minName %>"><%= minName %></a> </p>
+    <pre>
+&lt;link rel="stylesheet" href="http://hongyan.cqupt.edu.cn/cdn/js/<%= fileName %>"/&gt;&lt;/link&gt;
+    </pre>
+    <% } %>
+    <h4>请务必牢记上面的地址！想不起地址不管哟~</h4>
+    <a href="/cdn/upload">返回上传</a>
+</body>
+</html>
