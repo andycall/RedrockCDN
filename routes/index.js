@@ -15,6 +15,9 @@ router.get('/cdn/js/:jsname', function(req, res) {
    jsname = js[0];
    console.log(js, jsVersion);
    fs.readFile('../js_components/' + jsname + '/' + jsname + '.min.js', function(err, file){
+       if(err){
+           res.end('//no this file');
+       }
        res.end(file);
    });
 
