@@ -12,7 +12,7 @@ var Packages = new Schema({
     package_id: String,
     package_name : String,
     package_version : String,
-    package_isCompress : Boolean,
+    package_isCompress : Boolean
 });
 
 exports.Packages = mongoose.model('package', Packages);
