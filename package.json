@@ -15,7 +15,8 @@
     "connect-form": "^0.2.1",
     "cookie-parser": "~1.0.1",
     "debug": "~0.7.4",
-    "ejs": "~0.8.5"
+    "ejs": "~0.8.5",
+    "uglify-js": "^2.4.15"
   },
   "devDependencies": {
     "mongoose": "^3.8.15",
@@ -23,7 +24,6 @@
     "ejs": "~0.8.5",
     "express": "~4.2.0",
     "formidable": "^1.0.15",
-    "mongoose": "^3.8.15",
     "morgan": "~1.0.0",
     "multiparty": "^3.3.2",
     "static-favicon": "~1.0.0"

@@ -2,10 +2,11 @@
  * Created by andycall on 14-9-5.
  */
 
-var cache = require('./save');
+var cache = require('./cache');
 var fs = require('fs');
 var md5 = require('./encryption');
 var compressor = require('node-minify');
+var uglify = require('uglify-js');
 
 
 function save(name, hash, type, isCompress, callback){
@@ -35,16 +36,16 @@ function save(name, hash, type, isCompress, callback){
             });
         }
         else if(type == 'js'){
-            new compressor.minify({
-                type: 'yui-js',
-                fileIn: 'js_components/' + fileName + ".js",
-                fileOut: 'js_components/' + fileName + '.min.js',
-                callback: function(err, min){
-                    console.log(err);
+            var result = uglify.minify("js_components/" + fileName + '.js', {mangle: true});
+
+            fs.writeFile("js_components/" + fileName + '.min.js', result.code, function(err){
+                if(err){
+                    callback(err);
                 }
-            });
+            })
         }
     }
+
 
     cache.save(obj, function(err){
         callback(err);

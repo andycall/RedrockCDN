@@ -119,9 +119,10 @@ router.post('/cdn/upload', function (req, res) {
         tmpPath.pipe(fstream);
         fstream.on('close', function () {
             save(hashName, hash, type, true, function(err){
-                if(err){
-                    return res.end(err);
-                }
+                console.log(123123123123213);
+//                if(err){
+//                    return res.end(err);
+//                }
                 res.end('ok');
             });
         });
