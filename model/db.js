@@ -6,13 +6,16 @@ var Schema = mongoose.Schema,
     AppConfig = require('../config'),
     url = 'mongodb://' + AppConfig.username + ':' + AppConfig.password + '@' +  AppConfig.mongoose;
 
-mongoose.connect(u);
+    mongoose.connect(url);
+
 
 var Packages = new Schema({
     package_id: String,
     package_name : String,
     package_version : String,
-    package_isCompress : Boolean
+    package_isCompress : Boolean,
+    package_type : String,
+    package_filePath : String
 });
 
 exports.Packages = mongoose.model('package', Packages);
