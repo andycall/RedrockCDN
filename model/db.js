@@ -12,10 +12,8 @@ var Schema = mongoose.Schema,
 var Packages = new Schema({
     package_id: String,
     package_name : String,
-    package_version : String,
     package_isCompress : Boolean,
-    package_type : String,
-    package_filePath : String
+    package_type : String
 });
 
 exports.Packages = mongoose.model('package', Packages);

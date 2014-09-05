@@ -8,19 +8,17 @@ var md5 = require('./encryption');
 var compressor = require('node-minify');
 
 
-function save(name, version, filePath, type, isCompress, callback){
-    var id = md5(name + version);
+function save(name, hash, type, isCompress, callback){
+    var id = hash;
 
     var obj = {
         id : id,
         name : name,
-        version : version,
         type : type,
-        isCompress : isCompress,
-        filePath :  filePath
+        isCompress : isCompress
     };
 
-    var fileNameArr = filePath.split(".");
+    var fileNameArr = name.split(".");
     fileNameArr.pop();
     var fileName = fileNameArr.join(".");
 
@@ -48,8 +46,8 @@ function save(name, version, filePath, type, isCompress, callback){
         }
     }
 
-    cache.save(obj, function(){
-        callback();
+    cache.save(obj, function(err){
+        callback(err);
     });
 }
 

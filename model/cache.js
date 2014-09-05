@@ -3,15 +3,7 @@
  */
 var Packages = require('./db').Packages;
 
-//
-//Packages.find({
-//
-//});
-
-
-
 var Cache = {};
-
 
 /**
  * 保存数据
@@ -36,8 +28,7 @@ Cache.save = function(obj, callback){
         });
 
         package.save(obj, function(err){
-            if(err) throw err;
-            callback.call(this);
+            callback.call(this, err);
         });
     }
     else{
@@ -47,19 +38,19 @@ Cache.save = function(obj, callback){
 
 };
 
-Cache.search = function(id, callback){
-    var self = this;
-
-    if(!self.cache[id]){
-       Packages.find({ package_id : id}, function(err, obj){
-            if(err) throw err;
-            return callback.call(this, obj);
-       });
-    }
-    else{
-        return callback.call(this, self.cache[id]);
-    }
-};
+//Cache.search = function(id, callback){
+//    var self = this;
+//
+//    if(!self.cache[id]){
+//       Packages.find({ package_id : id}, function(err, obj){
+//            if(err) throw err;
+//            return callback.call(this, obj);
+//       });
+//    }
+//    else{
+//        return callback.call(this, self.cache[id]);
+//    }
+//};
 
 
 
