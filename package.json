@@ -23,6 +23,7 @@
     "ejs": "~0.8.5",
     "express": "~4.2.0",
     "formidable": "^1.0.15",
+    "mongoose": "^3.8.15",
     "morgan": "~1.0.0",
     "multiparty": "^3.3.2",
     "static-favicon": "~1.0.0"

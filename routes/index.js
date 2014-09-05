@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var multiparty = require('multiparty');
-
+var save = require('../model/save');
 
 /* GET home page. */
 router.get('/cdn', function(req, res) {
@@ -10,17 +10,14 @@ router.get('/cdn', function(req, res) {
 });
 
 router.get('/cdn/js/:jsname', function(req, res) {
-   var js = req.params.jsname.toString().split('@');
-   var jsVersion = js[1] || '';
-   jsname = js[0];
-   console.log(js, jsVersion);
-   fs.readFile('../js_components/' + jsname + '/' + jsname + '.min.js', function(err, file){
+   var jsname = req.params.jsname.toString();
+   fs.readFile('../js_components/' + jsname, function(err, file){
        if(err){
+           res.setHeader(404);
            res.end('//no this file');
        }
        res.end(file);
    });
-
 });
 
 router.get('/cdn/js*', function(req, res){
@@ -28,13 +25,26 @@ router.get('/cdn/js*', function(req, res){
         if(key[0] == '?'){
             var q = key.slice(1);
             var querys = q.split(',');
+            var result = {};
+            var flag = 0;
             querys.forEach(function(name){
-                //TODO fs.read
-                var result = '';
-                result;
-
-                res.writeHead(200, {'Content-Type': 'text/plain'});
-                res.end(result);
+                fs.readFile('js_components/' + name, function (err, content){
+                    if(err){
+                        console.log(name, err);
+                        return res.end('//can not find file: ' + name);
+                    }
+                    result[name] = content;
+                    flag++;
+                    if(flag === querys.length){  //all read
+                        console.log();
+                        var data = '';
+                        for(var i = 0, len = flag; i < flag; i++){
+                            data += result[querys[i]];
+                        }
+                        res.writeHead(200, {'Content-Type': 'application/javascript'});
+                        res.end(data);
+                    }
+                });
             });
         }
     }
@@ -42,11 +52,14 @@ router.get('/cdn/js*', function(req, res){
 
 router.get('/cdn/css/:cssname', function(req, res) {
     var css = req.params.cssname.toString();
-    console.log(css);
     fs.readFile('../css_components/' + css, function(err, file){
+        if(err){
+            res.setHeader(404);
+            res.end('//error file not found');
+        }
+        res.setHeader(200, {'Content-Type': 'text/css'});
         res.end(file);
     });
-
 });
 
 router.get('/cdn/css*', function(req, res){
@@ -54,13 +67,25 @@ router.get('/cdn/css*', function(req, res){
         if(key[0] == '?'){
             var q = key.slice(1);
             var querys = q.split(',');
+            var result = {};
+            var flag = 0;
             querys.forEach(function(name){
-                //TODO fs.read
-                var result = '';
-                result;
-
-                res.writeHead(200, {'Content-Type': 'text/plain'});
-                res.end(result);
+                fs.readFile('css_components/' + name, function (err, content){
+                    if(err){
+                        return res.end('//can not find file: ' + name);
+                    }
+                    result[name] = content;
+                    flag++;
+                    if(flag === querys.length){  //all read
+                        console.log();
+                        var data = '';
+                        for(var i = 0, len = flag; i < flag; i++){
+                            data += result[querys[i]];
+                        }
+                        res.writeHead(200, {'Content-Type': 'text/css'});
+                        res.end(data);
+                    }
+                });
             });
         }
     }
@@ -74,12 +99,13 @@ router.get('/cdn/admin', function(req, res){
 router.post('/cdn/upload', function (req, res) {
     var form = new multiparty.Form();
     form.parse(req, function(err, fields, files) {
-        var ver = fields.ver[0];
-        if (!ver) return res.end('//error no version');
+//        var ver = fields.ver[0];
+//        if (!ver) return res.end('//error no version');
         var oriName = files.files[0].originalFilename;
         var extName = oriName.split('.').reverse()[0];
+        var hash = (new Date().getTime()).toString().slice(-6);
         var tmpPath = fs.createReadStream(files.files[0].path);
-        var hashName = new Date().getTime() + '_' + oriName;
+        var hashName = hash + '_' + oriName;
         if(extName === 'css'){
             var type = 'css';
             var fstream = fs.createWriteStream('css_components/'+ hashName);
@@ -92,8 +118,12 @@ router.post('/cdn/upload', function (req, res) {
         console.log("Uploading: " + type + ' | ' + hashName);
         tmpPath.pipe(fstream);
         fstream.on('close', function () {
-            //TODO 给老董发
-            res.end('ok');
+            save(hashName, hash, type, true, function(err){
+                if(err){
+                    return res.end(err);
+                }
+                res.end('ok');
+            });
         });
     });
 });
