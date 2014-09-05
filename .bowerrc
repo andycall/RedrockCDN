@@ -1,5 +1,5 @@
 {
-  "directory" : "components",
+  "directory" : "js_components",
     "json"      : "bower.json",
       "endpoint"  : "https://Bower.herokuapp.com",
         "searchpath"  : "",

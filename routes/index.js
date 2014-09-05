@@ -14,9 +14,18 @@ router.get('/cdn/js/:jsname', function(req, res) {
    var jsVersion = js[1] || '';
    jsname = js[0];
    console.log(js, jsVersion);
-   fs.readFile('../components/' + jsname + '/' + jsname + '.min.js', function(err, file){
+   fs.readFile('../js_components/' + jsname + '/' + jsname + '.min.js', function(err, file){
        res.end(file);
-   })
+   });
+
+});
+
+router.get('/cdn/css/:cssname', function(req, res) {
+    var css = req.params.cssname.toString();
+    console.log(css);
+    fs.readFile('../css_components/' + css, function(err, file){
+        res.end(file);
+    });
 
 });
 
