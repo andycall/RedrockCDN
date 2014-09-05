@@ -14,17 +14,18 @@ var Cache = {};
 
 
 /**
- * 获取数据
+ * 保存数据
  * @param obj
  * @returns {*}
  */
-Cache.get = function(obj){
+Cache.save = function(obj, callback){
     var self = this;
 
     if(!self.cache[obj.id]){
 
         self.cache[obj.id] = obj;
 
+        // 保存数据库
         var package = new Packages({
             package_id: obj.id,
             package_name : obj.name,
@@ -36,36 +37,27 @@ Cache.get = function(obj){
 
         package.save(obj, function(err){
             if(err) throw err;
+            callback.call(this);
         });
     }
-
     else{
-        return self.cache[obj.id];
+        // 从缓存中取
+        return callback.call(this);
     }
 
 };
 
-/**
- * 将数据库中所有的数据缓存
- */
-Cache.save = function(){
-    var package = new Packages();
-
-
-};
-
-
-Cache.search = function(id){
+Cache.search = function(id, callback){
     var self = this;
 
     if(!self.cache[id]){
        Packages.find({ package_id : id}, function(err, obj){
             if(err) throw err;
-            return obj;
+            return callback.call(this, obj);
        });
     }
     else{
-        return cache[id];
+        return callback.call(this, self.cache[id]);
     }
 };
 

@@ -2,14 +2,14 @@
  * Created by andycall on 14-9-5.
  */
 
-var Packages = require('./db').Packages;
+var cache = require('./save');
 var fs = require('fs');
 var md5 = require('./encryption');
 var compressor = require('node-minify');
 
 
-function Save(name, version, filePath, type, isCompress, callback){
-    var id = md5(name);
+function save(name, version, filePath, type, isCompress, callback){
+    var id = md5(name + version);
 
     var obj = {
         id : id,
@@ -23,8 +23,6 @@ function Save(name, version, filePath, type, isCompress, callback){
     var fileNameArr = filePath.split(".");
     fileNameArr.pop();
     var fileName = fileNameArr.join(".");
-
-
 
 
     if(isCompress){
@@ -50,7 +48,13 @@ function Save(name, version, filePath, type, isCompress, callback){
         }
     }
 
+    cache.save(obj, function(){
+        callback();
+    });
 }
+
+
+module.exports = save;
 
 
 

@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "mongoose": "^3.8.15",
-    "node-minify": "^0.10.5"
+    "node-minify": "^0.10.5",
     "ejs": "~0.8.5",
     "express": "~4.2.0",
     "formidable": "^1.0.15",

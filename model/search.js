@@ -1,10 +1,13 @@
 /**
  * Created by andycall on 14-9-5.
  */
-var db = require("./db");
-var Packages = require("./db").Packages;
+var cache = require('./save');
+var fs = require('fs');
+var md5 = require('./encryption');
+var compressor = require('node-minify');
 
-function Search(name, version, type, isCompress){
+function search(name, version, type, isCompress, callback){
+
 
 }
 
