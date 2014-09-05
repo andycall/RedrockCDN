@@ -13,9 +13,10 @@ var Cache = {};
 Cache.save = function(obj, callback){
     var self = this;
 
-    if(!self.cache[obj.id]){
 
-        self.cache[obj.id] = obj;
+    if(!self[obj.id]){
+
+        self[obj.id] = obj;
 
         // 保存数据库
         var package = new Packages({
@@ -27,13 +28,14 @@ Cache.save = function(obj, callback){
             package_filePath : obj.filePath
         });
 
-        package.save(obj, function(err){
+        package.save(function(err){
+            console.log(12323);
             callback.call(this, err);
         });
     }
     else{
         // 从缓存中取
-        return callback.call(this);
+        return callback.call(self[obj.is]);
     }
 
 };
