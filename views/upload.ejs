@@ -1,0 +1,66 @@
+<% include head.ejs %>
+<body>
+<form id="form" action="/cdn/upload" method="POST" enctype="multipart/form-data">
+    <h1>红岩の网校 CDN 伺服器装置</h1>
+    <p>！只能上传 CSS / JS 文件！</p>
+
+    <div id="fileBox">
+        <input type="file" name="file1" id="file1" />
+    </div>
+    <button id="addFile" class="btn btn-default">Add File</button>
+    <button id="remove" class="btn btn-default">Remove Button</button>
+
+    <input type="submit" value="OK!" class="btn btn-primary"/>
+</form>
+
+<p></p>
+<div>By dongtiangche & ZeroLing</div>
+</body>
+<script type="text/javascript">
+    (function(form){
+        var count = 1;
+        var submit = document.getElementById('addFile');
+        var container = document.getElementById('fileBox');
+        var remove = document.getElementById('remove');
+
+        function addFile(){
+            count++;
+            var input = document.createElement('input');
+            input.type="file";
+            input.name = "file" + count;
+            input.id = "file" + count;
+            container.appendChild(input);
+        }
+
+        function deleteFile(){
+            var input = document.getElementById('file' + count);
+            container.removeChild(input);
+            count --;
+        }
+
+        submit.addEventListener('click', function(e){
+            e.preventDefault();
+
+            addFile();
+
+            return false;
+        });
+
+        remove.addEventListener('click', function(e){
+            e.preventDefault();
+
+            deleteFile();
+
+            return false;
+        })
+
+
+
+
+
+    }(document.getElementById('form')));
+
+
+
+</script>
+</html>

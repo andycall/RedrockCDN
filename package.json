@@ -5,17 +5,28 @@
   "scripts": {
     "start": "node ./bin/www"
   },
-  "author": ['dongtiangche', 'zeroling'],
+  "author": [
+    "dongtiangche",
+    "zeroling"
+  ],
   "dependencies": {
-    "express": "~4.2.0",
-    "static-favicon": "~1.0.0",
-    "morgan": "~1.0.0",
-    "cookie-parser": "~1.0.1",
     "body-parser": "~1.0.0",
+    "connect-busboy": "0.0.1",
+    "connect-form": "^0.2.1",
+    "cookie-parser": "~1.0.1",
     "debug": "~0.7.4",
-    "ejs": "~0.8.5"
+    "ejs": "~0.8.5",
+    "eventproxy": "^0.3.1",
+    "uglify-js": "^2.4.15"
   },
   "devDependencies": {
-    "node-minify": "^0.10.5"
+    "mongoose": "^3.8.15",
+    "node-minify": "^0.10.5",
+    "ejs": "~0.8.5",
+    "express": "~4.2.0",
+    "formidable": "^1.0.15",
+    "morgan": "~1.0.0",
+    "multiparty": "^3.3.2",
+    "static-favicon": "~1.0.0"
   }
 }
