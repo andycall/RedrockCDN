@@ -3,6 +3,9 @@ var router = express.Router();
 var fs = require('fs');
 var multiparty = require('multiparty');
 var save = require('../model/save');
+var EventProxy = require("eventproxy");
+var AppConfig = require('../config');
+
 
 /* GET home page. */
 router.get('/cdn', function(req, res) {
@@ -106,40 +109,92 @@ router.get('/cdn/admin', function(req, res){
 
 
 router.get('/cdn/upload', function(req, res){
-    res.render('upload');
+    return res.render('upload');
 });
+
+
 
 router.post('/cdn/upload', function (req, res) {
     var form = new multiparty.Form();
-    form.parse(req, function(err, fields, files) {
-//        var ver = fields.ver[0];
-//        if (!ver) return res.end('//error no version');
-        var oriName = files.files[0].originalFilename;
-        var extName = oriName.split('.').reverse()[0];
-        var hash = (new Date().getTime()).toString().slice(-6);
-        var tmpPath = fs.createReadStream(files.files[0].path);
-        var hashName = hash + '_' + oriName;
-        if(extName === 'css'){
-            var type = 'css';
-            var fstream = fs.createWriteStream('css_components/'+ hashName);
-        }else if (extName === 'js') {
-            var type = 'js';
-            var fstream = fs.createWriteStream('js_components/'+ hashName);
-        }else{
-            return res.end('//error file type');
-        }
-        console.log("Uploading: " + type + ' | ' + hashName);
-        tmpPath.pipe(fstream);
-        fstream.on('close', function () {
-            save(hashName, hash, type, true, function(err){
-                if(err){
-                    return res.end(err);
-                }
-                var minName = hashName.slice(0, -extName.length) + 'min.' + extName;
+    var filetype = "",
+        urlString = [AppConfig.website],
+        data = [],
+        type;
 
-                res.render('success', {type: type, fileName: hashName, minName: minName});
-            });
+
+    function FileCallback(){
+        var fileStr = [];
+
+        type = data[0].type;
+
+        urlString.push(type + "??");
+
+        console.log(data);
+
+        data.forEach(function(value, index){
+            (function(){
+                var hashName = value.hashName,
+                    hash = value.hash;
+
+                type = value.type;
+                save(hashName, hash, type, true, function(err){
+                    if(err){
+                        return res.end(err);
+                    }
+                    var minName = hashName.slice(0, -type.length) + 'min.' + type;
+
+                    fileStr.push(minName);
+
+                    if(data.length == fileStr.length){
+                        urlString = urlString.join("") + fileStr.join(",");
+
+                        res.render('success', {type: type, minName: urlString});
+                    }
+                });
+            }());
         });
+
+    }
+
+
+    form.parse(req, function(err, fields, files) {
+
+        for(var file in files){
+            if(files.hasOwnProperty(file)){
+                (function(){
+                    var oriName = files[file][0].originalFilename;
+                    var extName = oriName.split('.').reverse()[0];
+                    var hash = (new Date().getTime()).toString().slice(-6);
+                    var tmpPath = fs.createReadStream(files[file][0].path);
+                    var hashName = hash + '_' + oriName;
+                    filetype = filetype || extName;
+                    if(extName === 'css' && filetype == extName){
+                        var type = 'css';
+                        var fstream = fs.createWriteStream('css_components/'+ hashName);
+                    }else if (extName === 'js' && filetype == extName) {
+                        var type = 'js';
+                        var fstream = fs.createWriteStream('js_components/'+ hashName);
+                    }else{
+                        return res.end('//error file type');
+                    }
+                    console.log("Uploading: " + type + ' | ' + hashName);
+                    tmpPath.pipe(fstream);
+                    fstream.on('close', function () {
+                        var obj = {
+                            hashName : hashName,
+                            hash : hash,
+                            type : type,
+                            isCompress : true
+                        };
+                        data.push(obj);
+
+                        if(data.length == Object.keys(files).length){
+                            FileCallback()
+                        }
+                    });
+                }());
+            }
+        }
     });
 });
 

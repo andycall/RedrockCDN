@@ -2,3 +2,5 @@
 node_modules/
 npm-debug.log
 config.js
+css_components/
+js_components/

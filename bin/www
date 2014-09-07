@@ -2,9 +2,6 @@
 var debug = require('debug')('RedrockCDN');
 var app = require('../app');
 var AppConfig = require('../config');
-console.log(AppConfig);
-
-
 
 app.set('port', process.env.PORT || AppConfig.port);
 

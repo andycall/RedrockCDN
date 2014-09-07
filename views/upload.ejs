@@ -1,20 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>RedRock CDN Manager</title>
-</head>
+<% include head.ejs %>
 <body>
-<form action="/cdn/upload" method="POST" enctype="multipart/form-data">
+<form id="form" action="/cdn/upload" method="POST" enctype="multipart/form-data">
     <h1>红岩の网校 CDN 伺服器装置</h1>
     <p>！只能上传 CSS / JS 文件！</p>
-    <input type="file" name="files" id="file"/>
-
+    <input type="file" name="file1"/>
     <input type="submit" value="OK!"/>
-
-
 </form>
+<button id="addFile">Add File</button>
 <p></p>
 <div>By dongtiangche & ZeroLing</div>
 </body>
+<script type="text/javascript">
+    (function(form){
+        var count = 1;
+        submit = document.getElementById('addFile');
+        function addFile(){
+            count++;
+            var input = document.createElement('input');
+            input.type="file";
+            input.name = "file" + count;
+            form.appendChild(input);
+        }
+
+        submit.addEventListener('click', function(e){
+            e.preventDefault();
+
+            addFile();
+
+            return false;
+        });
+
+    }(document.getElementById('form')));
+
+
+
+</script>
 </html>
