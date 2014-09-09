@@ -7,6 +7,10 @@
     <pre>
 &lt;script src="<%= minName %>"&gt;&lt;/script&gt;
     </pre>
+    <p>普通版本： <a href="/cdn/js/<%= hashName %>"><%= hashName %></a></p>
+    <pre>
+&lt;script src="<%= hashName %>"&gt;&lt;/script&gt;
+    </pre>
     <% } %>
     <% if(type == 'css'){ %>
     <p>文件
@@ -14,6 +18,8 @@
     <pre>
 &lt;link rel="stylesheet" href="<%= minName %>"/&gt;&lt;/link&gt;
     </pre>
+    <p>普通版本： <a href="/cdn/css/<%= hashName %>"><%= hashName %></a></p>
+&lt;link rel="stylesheet" href="<%= hashName %>"/&gt;&lt;/link&gt;
     <% } %>
     <h4>请务必牢记上面的地址！想不起地址不管哟~</h4>
     <a href="/cdn/upload">返回上传</a>

@@ -118,16 +118,19 @@ router.post('/cdn/upload', function (req, res) {
     var form = new multiparty.Form();
     var filetype = "",
         urlString = [AppConfig.website],
+        URL, HASH,
         data = [],
         type;
 
 
     function FileCallback(){
-        var fileStr = [];
+        var fileStr = [],
+            hashStr = [];
 
         type = data[0].type;
 
         urlString.push(type + "??");
+
 
         console.log(data);
 
@@ -143,12 +146,15 @@ router.post('/cdn/upload', function (req, res) {
                     }
                     var minName = hashName.slice(0, -type.length) + 'min.' + type;
 
+
                     fileStr.push(minName);
+                    hashStr.push(hashName);
 
                     if(data.length == fileStr.length){
-                        urlString = urlString.join("") + fileStr.join(",");
+                        URL = urlString.join("") + fileStr.join(",");
+                        HASH = urlString.join("") + hashStr.join(",");
 
-                        res.render('success', {type: type, minName: urlString});
+                        res.render('success', {type: type, minName: URL, hashName : HASH});
                     }
                 });
             }());
